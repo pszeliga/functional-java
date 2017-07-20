@@ -10,14 +10,8 @@ public interface Optionals {
         return left.flatMap(leftVal -> right.map(rightVal -> function.apply(leftVal, rightVal)));
     }
 
-    static <T> Optional<T> getPresentOrApplyBoth(Optional<T> left, Optional<T> right,
-                                                 BiFunction<? super T, ? super T, ? extends T> function) {
-        if (left.isPresent()) {
-            if(right.isPresent()) {
-                return lift(left, right, function);
-            }
-            return left;
-        }
-        return right;
+    static <R, T, Z> BiFunction<Optional<T>, Optional<R>, Optional<Z>> lift(BiFunction<? super T, ? super R, ? extends Z> function) {
+        return (left, right) -> left.flatMap(leftVal -> right.map(rightVal -> function.apply(leftVal, rightVal)));
     }
+
 }
